@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.codingdojo.mvc.models.Book;
+import com.codingdojo.mvc.repositories.BookRepository;
+
 
 @Service
 public class BookService {
@@ -31,26 +34,28 @@ public class BookService {
             return null;
         }
     }
-    //delete a book
-    public void deleteBook(Long id) {
-    	Optional<Book> optionalBook = bookRepository.findById(id);
-    	if(optionalBook.isPresent()) {
-    		bookRepository.deleteById(id);
-    	}
+    
+ // edits a book
+    public Book updateBook(Book b) {
+    	return bookRepository.save(b);
     }
     
-    //update a book
-	public Book updateBook(Long id, String title, String desc, String lang, Integer numOfPages) {
-			
-		Book book = findBook(id);
-		if(book.getId()== id) {
-			book.setTitle(title);
-			book.setDescription(desc);
-			book.setLanguage(lang);
-			book.setNumberOfPages(numOfPages);
-			return createBook(book);
-		}else {
-			return null;
-		}
-	}
+    public Book updateBook(Long id, String title, String desc, String lang, Integer numOfPages) {
+    	Optional <Book> temp = bookRepository.findById(id);
+    	if(temp != null) {
+    		temp.get().setTitle(title);
+    		temp.get().setDescription(desc);
+    		temp.get().setLanguage(lang);
+    		temp.get().setNumberOfPages(numOfPages);
+
+    		return temp.get();
+    	}
+    	return null;        
+    }
+    
+    // deletes a book
+    public void deleteBook(Long id) {
+    	bookRepository.deleteById(id);
+    }
+
 }
